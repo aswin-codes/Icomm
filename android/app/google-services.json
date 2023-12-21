@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "797628902115",
+    "project_id": "icomm-103ed",
+    "storage_bucket": "icomm-103ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797628902115:android:c3da13e5fa11c5b7a6f3d6",
+        "android_client_info": {
+          "package_name": "com.example.icomm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpS_hyFghCCqmB7-v23NeWSXeLW-tE59o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

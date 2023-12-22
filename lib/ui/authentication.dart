@@ -49,7 +49,7 @@ class _AuthenticationState extends State<Authentication> {
               child: MaterialButton(
                 onPressed: () async {
                   bool shouldNavigate =
-                      await register(_emailField.text, _passwordField.text);
+                      await register(_emailField.text, _passwordField.text,"Aswin Raaj");
                   if (shouldNavigate) {
                     //Navigate to HomeScreen
                     Navigator.push(context,

@@ -38,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 backgroundColor: Colors.white,
                 elevation: 0.0,
                 centerTitle: true,

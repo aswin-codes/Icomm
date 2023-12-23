@@ -31,6 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
         if (state is LogOutButtonClickedState) {
           Navigator.pushNamedAndRemoveUntil(
               context, '/splash', (route) => false);
+        } else if (state is HomeErrorFetchingProductsState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text(
+                  "Sorry, products could'nt be fetched. Please try again later...")));
         }
       },
       bloc: homeBloc,
@@ -51,7 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: PopupMenuButton<String>(
                       onSelected: (value) {
                         // Handle menu item selection
-                        if (value == "logout") {}
+                        if (value == "logout") {
+                          homeBloc.add(LogOutButtonClickedEvent());
+                        }
                       },
                       child: CircleAvatar(
                         backgroundColor: Colors.grey,
@@ -111,23 +117,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                         (index == categoryList.length - 1))
                                     ? EdgeInsets.zero
                                     : EdgeInsets.symmetric(horizontal: 10),
-                                child: Chip(
-                                  side: BorderSide.none,
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(70)),
-                                  label: Text(
-                                    category.categoryName,
-                                    style: GoogleFonts.roboto(
-                                        color: category.isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontSize: 15),
+                                child: GestureDetector(
+                                  onTap: () => {
+                                    homeBloc.add(CategoryChangedEvent(
+                                        category: category))
+                                  },
+                                  child: Chip(
+                                    side: BorderSide.none,
+                                    shape: RoundedRectangleBorder(
+                                        side: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(70)),
+                                    label: Text(
+                                      category.categoryName,
+                                      style: GoogleFonts.roboto(
+                                          color: category.isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontSize: 15),
+                                    ),
+                                    color: category.isSelected
+                                        ? MaterialStateProperty.all(
+                                            Colors.black)
+                                        : MaterialStateProperty.all(
+                                            Colors.grey.shade300),
                                   ),
-                                  color: category.isSelected
-                                      ? MaterialStateProperty.all(Colors.black)
-                                      : MaterialStateProperty.all(
-                                          Colors.grey.shade300),
                                 ),
                               );
                             }),

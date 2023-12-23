@@ -15,6 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial()) {
     on<HomeInitialEvent>(homeInitialEvent);
     on<LogOutButtonClickedEvent>(logOutButtonClickedEvent);
+    on<CategoryChangedEvent>(categoryChangedEvent);
   }
 
   FutureOr<void> homeInitialEvent(
@@ -41,19 +42,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             productId: element['id']));
       });
       productList = tempList;
+      allProductList = tempList;
 
       //Request to get the list of categories available
       final responseCategory = await http
           .get(Uri.parse("https://api.escuelajs.co/api/v1/categories"));
       List<dynamic> respBodyCat = await jsonDecode(responseCategory.body);
+      List<CategoryModel> tempListCat = <CategoryModel>[];
+      print(respBodyCat);
       respBodyCat.forEach((element) {
-        categoryList.add(CategoryModel(
-            categoryId: element['id'],
-            categoryName: element['name'],
-            isSelected: false));
+        if (!isAlreadyAdded(tempListCat, element)) {
+          tempListCat.add(CategoryModel(
+              categoryId: element['id'],
+              categoryName: element['name'],
+              isSelected: false));
+        }
       });
+      categoryList = categoryList + tempListCat;
       emit(HomeSuccessfullyFetchedProductsState());
     } catch (e) {
+      print(e);
       emit(HomeErrorFetchingProductsState());
     }
   }
@@ -63,5 +71,50 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
     emit(LogOutButtonClickedState());
+  }
+
+  List<CategoryModel> updateCategoryList(
+      List<CategoryModel> categoryList, int selectedCategoryId) {
+    for (int i = 0; i < categoryList.length; i++) {
+      if (categoryList[i].categoryId == selectedCategoryId) {
+        categoryList[i] = CategoryModel(
+          categoryId: categoryList[i].categoryId,
+          categoryName: categoryList[i].categoryName,
+          isSelected: true,
+        );
+      } else {
+        categoryList[i] = CategoryModel(
+          categoryId: categoryList[i].categoryId,
+          categoryName: categoryList[i].categoryName,
+          isSelected: false,
+        );
+      }
+    }
+    return categoryList;
+  }
+
+  bool isAlreadyAdded(
+      List<CategoryModel> listCategories, Map<String, dynamic> ele) {
+    for (int i = 0; i < listCategories.length; i++) {
+      if (listCategories[i].categoryName == ele['name']) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  FutureOr<void> categoryChangedEvent(
+      CategoryChangedEvent event, Emitter<HomeState> emit) {
+    CategoryModel category = event.category;
+    categoryList = updateCategoryList(categoryList, category.categoryId);
+    if (category.categoryId == 0) {
+      productList = allProductList;
+    } else {
+      productList = allProductList
+          .where(
+              (element) => element.category.categoryId == category.categoryId)
+          .toList();
+    }
+    emit(HomeSuccessfullyFetchedProductsState());
   }
 }

@@ -5,4 +5,9 @@ sealed class HomeEvent {}
 
 class HomeInitialEvent extends HomeEvent {}
 
+class CategoryChangedEvent extends HomeEvent {
+  CategoryModel category;
+  CategoryChangedEvent({required this.category});
+}
+
 class LogOutButtonClickedEvent extends HomeEvent {}

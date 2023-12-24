@@ -35,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text(
                   "Sorry, products could'nt be fetched. Please try again later...")));
+        } else if (state is ProductClickedState) {
+          Navigator.pushNamed(context, '/product');
         }
       },
       bloc: homeBloc,
@@ -161,69 +163,82 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: productList.length,
                           itemBuilder: (BuildContext context, int index) {
                             ProductModel product = productList[index];
-                            return Container(
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[500],
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Image.network(
-                                        product.imageUrl[0].toString(),
-                                        fit: BoxFit
-                                            .cover, // This ensures that the image covers the entire space
+                            return GestureDetector(
+                              onTap: () {
+                                homeBloc
+                                    .add(ProductClickedEvent(product: product));
+                              },
+                              child: Container(
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[500],
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Hero(
+                                          tag: "image",
+                                          child: Image.network(
+                                            product.imageUrl[0].toString(),
+                                            fit: BoxFit
+                                                .cover, // This ensures that the image covers the entire space
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8, bottom: 5),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(product.name.length > 15
-                                                ? "${product.name.substring(0, 15)}..."
-                                                : product.name),
-                                            Text(
-                                              "\$ ${product.price}",
-                                              style: GoogleFonts.roboto(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600),
-                                            )
-                                          ],
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 8, bottom: 5),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(product.name.length > 15
+                                                  ? "${product.name.substring(0, 15)}..."
+                                                  : product.name),
+                                              Text(
+                                                "\$ ${product.price}",
+                                                style: GoogleFonts.roboto(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: const BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10))),
-                                        child: const Icon(
-                                          Icons.add_rounded,
-                                          color: Colors.white,
+                                        Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: const BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(10))),
+                                          child: const Icon(
+                                            Icons.add_rounded,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           })

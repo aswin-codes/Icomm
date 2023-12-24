@@ -11,3 +11,8 @@ class CategoryChangedEvent extends HomeEvent {
 }
 
 class LogOutButtonClickedEvent extends HomeEvent {}
+
+class ProductClickedEvent extends HomeEvent {
+  ProductModel product;
+  ProductClickedEvent({required this.product});
+}

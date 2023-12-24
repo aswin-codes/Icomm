@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:icomm/data/home_screen_data.dart';
+import 'package:icomm/data/product_screen_data.dart';
 import 'package:icomm/features/Home/model/category_model.dart';
 import 'package:icomm/features/Home/model/product_model.dart';
 import 'package:meta/meta.dart';
@@ -16,6 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialEvent>(homeInitialEvent);
     on<LogOutButtonClickedEvent>(logOutButtonClickedEvent);
     on<CategoryChangedEvent>(categoryChangedEvent);
+    on<ProductClickedEvent>(productClickedEvent);
   }
 
   FutureOr<void> homeInitialEvent(
@@ -51,7 +53,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       List<CategoryModel> tempListCat = <CategoryModel>[];
       print(respBodyCat);
       respBodyCat.forEach((element) {
-        if (!isAlreadyAdded(tempListCat, element)) {
+        if (!isAlreadyAdded(element)) {
           tempListCat.add(CategoryModel(
               categoryId: element['id'],
               categoryName: element['name'],
@@ -93,10 +95,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     return categoryList;
   }
 
-  bool isAlreadyAdded(
-      List<CategoryModel> listCategories, Map<String, dynamic> ele) {
-    for (int i = 0; i < listCategories.length; i++) {
-      if (listCategories[i].categoryName == ele['name']) {
+  bool isAlreadyAdded(Map<String, dynamic> ele) {
+    //bool isThere = false;
+    for (int i = 0; i < categoryList.length; i++) {
+      if ((categoryList[i].categoryName == ele['name']) ||
+          ele['name'] == "Softech") {
         return true;
       }
     }
@@ -116,5 +119,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           .toList();
     }
     emit(HomeSuccessfullyFetchedProductsState());
+  }
+
+  FutureOr<void> productClickedEvent(
+      ProductClickedEvent event, Emitter<HomeState> emit) {
+    productData = event.product;
+    emit(ProductClickedState());
   }
 }

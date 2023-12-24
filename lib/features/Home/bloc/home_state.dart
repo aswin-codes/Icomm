@@ -14,3 +14,5 @@ class HomeSuccessfullyFetchedProductsState extends HomeState {}
 class HomeErrorFetchingProductsState extends HomeState {}
 
 class LogOutButtonClickedState extends HomeActionState {}
+
+class ProductClickedState extends HomeActionState {}

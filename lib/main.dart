@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:icomm/features/Home/ui/home_screen.dart';
+import 'package:icomm/features/Product/ui/product_screen.dart';
 import 'package:icomm/features/SignIn/ui/sign_in.dart';
 import 'package:icomm/features/SignUp/ui/sign_up.dart';
 import 'package:icomm/features/SplashScreen/ui/splash_screen.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
         "/splash": (BuildContext context) => SplashScreen(),
         '/signIn': (BuildContext context) => SignIn(),
         "/signUp": (BuildContext context) => SignUp(),
-        "/start" : (BuildContext context) => StartScreen()
+        "/start" : (BuildContext context) => StartScreen(),
+        "/product" : (BuildContext context) => ProductScreen()
       },
       initialRoute: "/start",
     );
